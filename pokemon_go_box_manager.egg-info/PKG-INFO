@@ -1,0 +1,92 @@
+Metadata-Version: 2.4
+Name: pokemon-go-box-manager
+Version: 0.1.0
+Summary: Organizador automático de la caja de Pokémon GO mediante visión artificial
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: customtkinter>=5.2.2
+Requires-Dist: sqlalchemy>=2.0.36
+Requires-Dist: opencv-python>=4.10.0
+Requires-Dist: paddleocr>=2.9.1
+Requires-Dist: paddlepaddle>=3.0.0
+Requires-Dist: openpyxl>=3.1.5
+Requires-Dist: reportlab>=4.2.5
+
+# Pokemon GO Box Manager
+
+Organizador automático de la caja de Pokémon GO mediante visión artificial.
+
+## Requisitos
+
+- Python **3.11+**
+- Windows (los datos de la app se guardan en `%APPDATA%`)
+
+## Instalación
+
+Desde la raíz del proyecto:
+
+```powershell
+cd "D:\Proyectos\pkm manager"
+python -m pip install -e .
+```
+
+Solo para probar la base actual (sin instalar dependencias pesadas como OCR):
+
+```powershell
+cd "D:\Proyectos\pkm manager"
+python -m app.main
+```
+
+## Cómo arrancar
+
+Siempre ejecuta los comandos desde la **raíz del proyecto**, no desde `D:\Proyectos` ni desde la carpeta `app\`.
+
+### Opción 1: módulo Python (recomendada)
+
+```powershell
+cd "D:\Proyectos\pkm manager"
+python -m app.main
+```
+
+### Opción 2: script directo
+
+```powershell
+cd "D:\Proyectos\pkm manager"
+python app\main.py
+```
+
+### Opción 3: comando instalado (tras `pip install -e .`)
+
+```powershell
+pokemon-go-box-manager
+```
+
+## Salida esperada
+
+Si todo va bien verás algo como:
+
+```text
+INFO | app.main | Starting Pokemon GO Box Manager v0.1.0
+INFO | app.main | Foundation ready. UI module pending.
+```
+
+La interfaz gráfica y el escaneo aún no están implementados; por ahora solo arranca la base (config, logs y carpetas).
+
+## Errores habituales
+
+| Comando incorrecto | Problema |
+|---|---|
+| `python -m app.main` desde `D:\Proyectos` | No encuentra el paquete `app` |
+| `python -m app.main` desde `app\` | El path no apunta a la raíz del proyecto |
+| `python -m app/main.py` | `python -m` usa nombres de módulo, no rutas con `/` o `.py` |
+| `pip install -e .` con Python 3.10 o anterior | El proyecto requiere Python 3.11+ |
+
+**Correcto:** `python -m app.main` o `python app\main.py` desde `D:\Proyectos\pkm manager`
+
+## Datos de la aplicación
+
+En Windows se crean en:
+
+- Config: `%APPDATA%\PokemonGOBoxManager\config.json`
+- Logs: `%APPDATA%\PokemonGOBoxManager\logs\`
+- Exports: `%APPDATA%\PokemonGOBoxManager\exports\`

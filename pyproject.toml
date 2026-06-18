@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pokemon-go-box-manager"
+version = "0.1.0"
+description = "Organizador automático de la caja de Pokémon GO mediante visión artificial"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "customtkinter>=5.2.2",
+    "sqlalchemy>=2.0.36",
+    "opencv-python>=4.10.0",
+    "paddleocr>=2.9.1",
+    "paddlepaddle>=3.0.0",
+    "openpyxl>=3.1.5",
+    "reportlab>=4.2.5",
+]
+
+[project.scripts]
+pokemon-go-box-manager = "app.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "core*", "config*", "utils*", "database*", "models*", "ocr*", "vision*", "adb*", "scanner*", "rules*", "ui*", "exports*"]
