@@ -64,12 +64,16 @@ Después se abrirá una ventana con:
 - contador de Pokémon en base de datos
 - ajustes básicos (ADB, OCR, delay de escaneo)
 
-### Captura y escaneo de prueba
+### Captura y escaneo
 
 1. Conecta el móvil por USB y activa depuración USB
-2. Abre Pokémon GO en la pantalla que quieras capturar
+2. Abre Pokémon GO en la **ficha del primer Pokémon** de tu caja
 3. En la app pulsa **Buscar dispositivos**
-4. Usa **Capturar pantalla** o **Escaneo de prueba**
+4. Pulsa **Iniciar escaneo automático**
+
+La app capturará cada Pokémon, leerá nombre/CP/IV con OCR, lo guardará en la base de datos y pasará al siguiente con un deslizamiento automático. Se detiene sola al volver al primero o puedes pulsar **Detener escaneo**.
+
+También puedes usar **Capturar pantalla** o **Escaneo de prueba** para probar uno solo.
 
 Las capturas se guardan en `%APPDATA%\PokemonGOBoxManager\screenshots\`.
 

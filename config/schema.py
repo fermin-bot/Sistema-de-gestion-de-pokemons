@@ -16,7 +16,7 @@ class AdbConfig:
 
 @dataclass(slots=True)
 class OcrConfig:
-    language: str = "en"
+    language: str = "es"
     use_gpu: bool = False
     confidence_threshold: float = 0.6
 
@@ -26,6 +26,8 @@ class ScanConfig:
     delay_between_pokemon_ms: int = 500
     screenshot_format: str = "png"
     max_scroll_attempts: int = 200
+    swipe_duration_ms: int = 400
+    stop_on_duplicate: bool = True
 
 
 @dataclass(slots=True)

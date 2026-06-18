@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from dataclasses import dataclass
+from pathlib import Path
 
 from config.schema import AdbConfig
 from utils.logging import get_logger
@@ -140,6 +142,63 @@ class AdbClient:
         output_path.write_bytes(result.stdout)
         logger.info("Screenshot saved to %s", output_path)
         return output_path
+
+    def get_screen_size(self, serial: str | None = None) -> tuple[int, int]:
+        output = self.shell("wm size", serial=serial)
+        match = re.search(r"Physical size:\s*(\d+)x(\d+)", output)
+        if not match:
+            match = re.search(r"Override size:\s*(\d+)x(\d+)", output)
+        if not match:
+            raise RuntimeError(f"No se pudo obtener el tamaño de pantalla: {output}")
+        return int(match.group(1)), int(match.group(2))
+
+    def shell(self, command: str, serial: str | None = None) -> str:
+        executable = shutil.which(self._config.adb_path)
+        if executable is None:
+            raise RuntimeError(f"ADB no encontrado en: {self._config.adb_path}")
+
+        device_serial = serial or self.resolve_device_serial()
+        if device_serial is None:
+            raise RuntimeError("No hay ningún dispositivo listo.")
+
+        try:
+            result = subprocess.run(
+                [executable, "-s", device_serial, "shell", command],
+                capture_output=True,
+                text=True,
+                timeout=self._config.connection_timeout_seconds,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise RuntimeError(f"Error ejecutando ADB shell: {exc}") from exc
+
+        if result.returncode != 0:
+            message = result.stderr.strip() or result.stdout.strip()
+            raise RuntimeError(message or "Comando ADB shell falló.")
+
+        return result.stdout.strip()
+
+    def tap(self, x: int, y: int, serial: str | None = None) -> None:
+        self.shell(f"input tap {x} {y}", serial=serial)
+
+    def swipe(
+        self,
+        x1: int,
+        y1: int,
+        x2: int,
+        y2: int,
+        duration_ms: int = 400,
+        serial: str | None = None,
+    ) -> None:
+        self.shell(f"input swipe {x1} {y1} {x2} {y2} {duration_ms}", serial=serial)
+
+    def swipe_to_next_pokemon(self, duration_ms: int = 400, serial: str | None = None) -> None:
+        """Desliza al siguiente Pokémon en la vista de detalle."""
+        width, height = self.get_screen_size(serial=serial)
+        start_x = int(width * 0.82)
+        end_x = int(width * 0.18)
+        y = int(height * 0.5)
+        self.swipe(start_x, y, end_x, y, duration_ms=duration_ms, serial=serial)
 
 
 def _extract_property(parts: list[str], prefix: str) -> str | None:
